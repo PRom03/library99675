@@ -3,7 +3,7 @@ const Book = require('../models/Book');
 //const Publisher = require('../models/Publisher');
 
 exports.index = async (req, res) => {
-    const books = await Book.find(undefined, undefined, undefined)/*.populate('author').populate('publisher')*/;
+    const books = await Book.find(undefined, undefined, undefined).lean()/*.populate('author').populate('publisher')*/;
     res.render('books/index', { books, user: req.user });
 };
 /*

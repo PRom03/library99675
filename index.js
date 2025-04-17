@@ -7,9 +7,16 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-mongoose.connect('mongodb://localhost:27017/', {
+mongoose.connect('mongodb://127.0.0.1:27017/library', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+});
+mongoose.connection.on('connected', () => {
+    console.log('Połączono z MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+    console.error('Błąd połączenia z MongoDB:', err);
 });
 
 app.engine('hbs', exphbs.engine({
