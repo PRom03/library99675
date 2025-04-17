@@ -1,0 +1,53 @@
+<h1>Książki</h1>
+
+{{#if user}}
+    {{#if (eq user.role_name "Admin")}}
+        <a href="/books/create" class="btn btn-primary">Dodaj książkę</a>
+    {{/if}}
+{{/if}}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Tytuł</th>
+        <th>ISBN</th>
+        <th>Rok wydania</th>
+        <th>Autor ID</th>
+        <th>Wydawca ID</th>
+        <th>Dostępnych</th>
+        <th>Działania</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each books}}
+        <tr>
+            <td>{{this.title}}</td>
+            <td>{{this.isbn}}</td>
+            <td>{{this.year_of_publication}}</td>
+            <td>{{this.author_id}}</td>
+            <td>{{this.publisher_id}}</td>
+            <td>{{this.available}}</td>
+            <td>
+                <a href="/books/{{this._id}}" class="btn btn-info">Pokaż</a>
+
+                {{#if ../user}}
+                    {{#if (eq ../user.role_name "Admin")}}
+                        <a href="/books/{{this._id}}/edit" class="btn btn-warning">Edytuj</a>
+                        <form action="/books/{{this._id}}?_method=DELETE" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Usuń</button>
+                        </form>
+                    {{/if}}
+                {{/if}}
+
+                {{#if ../user}}
+                    {{#if (and (eq ../user.role_name "User") (gt this.available 0))}}
+                        <form action="/books/{{this._id}}/reserve" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-primary">Zarezerwuj</button>
+                        </form>
+                    {{/if}}
+                {{/if}}
+            </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
