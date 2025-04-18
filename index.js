@@ -6,6 +6,7 @@ const app = express();
 const Book = require('./models/Book');
 const Author = require('./models/Author');
 const Publisher = require('./models/Publisher');
+const Category = require('./models/Category');
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
@@ -21,7 +22,34 @@ mongoose.connection.on('error', (err) => {
     console.error('Błąd połączenia z MongoDB:', err);
 });
 
+async function migrate() {
+    const books = await Book.find();
 
+    for (let book of books) {
+        const category = await Category.findOne({ id: book.category_id });
+        const author = await Author.findOne({ id: book.author_id });
+        const publisher = await Publisher.findOne({ id: book.publisher_id });
+
+        if (category) {
+            book.set({
+                author: author._id,
+                publisher: publisher._id,
+               category: category._id,
+            });
+
+            // usuń stare pola
+            book.set('category_id', undefined, { strict: false });
+            book.set('author_id', undefined, { strict: false });
+            book.set('publisher_id', undefined, { strict: false });
+            await book.save();
+        } else {
+            console.warn(`Brak dla książki: ${book.title}`);
+        }
+    }
+
+    console.log('Migracja zakończona.');
+}
+//migrate();
 app.engine('hbs', exphbs.engine({
     extname: 'hbs',
     helpers: {

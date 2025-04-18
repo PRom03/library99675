@@ -24,7 +24,7 @@ exports.store = async (req, res) => {
 };
 
 exports.show = async (req, res) => {
-    const book = await Book.findOne({ isbn: req.params.isbn });
+    const book = await Book.findOne({ isbn: req.params.isbn }).populate('author').populate('publisher');
     res.render('books/show', { book });
 };
 
