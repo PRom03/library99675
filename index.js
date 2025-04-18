@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const exphbs = require('express-handlebars');
 const methodOverride = require('method-override');
 const app = express();
-
+const Book = require('./models/Book');
+const Author = require('./models/Author');
+const Publisher = require('./models/Publisher');
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
@@ -19,12 +21,16 @@ mongoose.connection.on('error', (err) => {
     console.error('Błąd połączenia z MongoDB:', err);
 });
 
+
 app.engine('hbs', exphbs.engine({
     extname: 'hbs',
     helpers: {
         eq: (a, b) => a === b,
         gt: (a, b) => a > b,
         and: (a, b) => a && b
+    },
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true  // Zezwala na dostęp do właściwości prototypu
     }
 }));
 app.set('view engine', 'hbs');

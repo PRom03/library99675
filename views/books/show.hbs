@@ -1,0 +1,15 @@
+<h1>Dane książki</h1>
+<div class="card">
+    <div class="card-body">
+        <h2>{{book.title}}</h2>
+        <p><strong>ISBN:</strong> {{book.isbn}}</p>
+        <p><strong>Rok wydania:</strong> {{book.year_of_publication}}</p>
+        <p><strong>Autor:</strong> {{book.author.first_name}} {{book.author.last_name}}</p>
+        <p><strong>Wydawca:</strong> {{book.publisher.name}}</p>
+        <p><strong>Dostępnych:</strong> {{book.available}}</p>
+
+        <a href="/books" class="btn btn-secondary">Powrót</a>
+
+        {{!-- Możesz dodać formularz rezerwacji jeśli masz logikę auth --}}
+    </div>
+</div>

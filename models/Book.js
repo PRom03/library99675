@@ -4,8 +4,10 @@ const bookSchema = new mongoose.Schema({
     isbn: { type: String, unique: true },
     title: String,
     year_of_publication: Number,
-    author_id: Number,
-    publisher_id: Number,
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'author' },
+    publisher: { type: mongoose.Schema.Types.ObjectId, ref: 'publisher' },
+    author_id:Number,
+    publisher_id:Number,
     available: Number,
     category_id: Number
 }, { collection: 'book' }); // ważne: kolekcja może nie być domyślnie liczba mnoga

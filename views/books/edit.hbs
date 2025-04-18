@@ -1,0 +1,52 @@
+<h1>Edytuj książkę</h1>
+<div class="card">
+    <div class="card-body">
+        <form action="/books/{{book.isbn}}" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+
+            <div class="form-group">
+                <label for="title">Tytuł</label>
+                <input type="text" class="form-control" id="title" name="title" value="{{book.title}}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="isbn">ISBN</label>
+                <input type="text" class="form-control" id="isbn" name="isbn" value="{{book.isbn}}" pattern="[0-9]{13}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="year_of_publication">Rok wydania</label>
+                <input type="text" class="form-control" id="year_of_publication" name="year_of_publication" value="{{book.year_of_publication}}" pattern="[1-9][0-9]{3}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="author_id">Autor</label>
+                <select name="author_id" id="author_id" class="form-control" required>
+                    {{#each authors}}
+                        <option value="{{this._id}}" {{#if (eq ../book.author_id this._id)}}selected{{/if}}>
+                            {{this.first_name}} {{this.last_name}}
+                        </option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="publisher_id">Wydawca</label>
+                <select class="form-control" id="publisher_id" name="publisher_id" required>
+                    {{#each publishers}}
+                        <option value="{{this._id}}" {{#if (eq this._id ../book.publisher_id)}}selected{{/if}}>
+                            {{this.name}}
+                        </option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="available">Dostępnych</label>
+                <input type="number" class="form-control" id="available" name="available" value="{{book.available}}" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+        </form>
+    </div>
+</div>

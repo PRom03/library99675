@@ -1,12 +1,12 @@
 const Book = require('../models/Book');
-//const Author = require('../models/Author');
-//const Publisher = require('../models/Publisher');
+const Author = require('../models/Author');
+const Publisher = require('../models/Publisher');
 
 exports.index = async (req, res) => {
-    const books = await Book.find(undefined, undefined, undefined).lean()/*.populate('author').populate('publisher')*/;
+    const books = await Book.find().lean().populate('author').populate('publisher');
     res.render('books/index', { books, user: req.user });
 };
-/*
+
 exports.create = async (req, res) => {
     const authors = await Author.find();
     const publishers = await Publisher.find();
@@ -24,14 +24,15 @@ exports.store = async (req, res) => {
 };
 
 exports.show = async (req, res) => {
-    const book = await Book.findOne({ isbn: req.params.isbn }).populate('author').populate('publisher');
+    const book = await Book.findOne({ isbn: req.params.isbn });
     res.render('books/show', { book });
 };
 
 exports.edit = async (req, res) => {
-    const book = await Book.findOne({ isbn: req.params.isbn });
+    const book = await Book.findOne({ isbn: req.params.isbn }).populate('author').populate('publisher');//.populate('author').populate('publisher');
     const authors = await Author.find();
     const publishers = await Publisher.find();
+
     res.render('books/edit', { book, authors, publishers });
 };
 
@@ -47,4 +48,3 @@ exports.destroy = async (req, res) => {
     await Book.findOneAndDelete({ isbn: req.params.isbn });
     res.redirect('/books');
 };
-*/
