@@ -1,50 +1,62 @@
 const Book = require('../models/Book');
-const Author = require('../models/Author');
-const Publisher = require('../models/Publisher');
 
 exports.index = async (req, res) => {
-    const books = await Book.find().lean().populate('author').populate('publisher');
-    res.render('books/index', { books, user: req.user });
+    try {
+        const books = await Book.find().populate('author').populate('publisher').populate('category');
+        res.json(books);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
 
-exports.create = async (req, res) => {
-    const authors = await Author.find();
-    const publishers = await Publisher.find();
-    res.render('books/create', { authors, publishers });
-};
+
 
 exports.store = async (req, res) => {
     try {
-        const { title, isbn, year_of_publication, author, publisher, available } = req.body;
-        await Book.create({ title, isbn, year_of_publication, author, publisher, available });
-        res.redirect('/books');
+        const { title, isbn, year_of_publication, author, publisher,category, available } = req.body;
+        const newBook = await Book.create({ title, isbn, year_of_publication, author, publisher, category,available });
+        res.status(201).json(newBook);
     } catch (err) {
-        res.status(400).send('Validation error: ' + err.message);
+        res.status(400).json({ error: err.message });
     }
 };
 
 exports.show = async (req, res) => {
-    const book = await Book.findOne({ isbn: req.params.isbn }).populate('author').populate('publisher');
-    res.render('books/show', { book });
+    try {
+        const book = await Book.findOne({isbn:req.params.isbn}).populate('author').populate('publisher');
+        if (!book) return res.status(404).json({ message: 'Książka nie znaleziona' });
+        res.json(book);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
 
-exports.edit = async (req, res) => {
-    const book = await Book.findOne({ isbn: req.params.isbn }).populate('author').populate('publisher');//.populate('author').populate('publisher');
-    const authors = await Author.find();
-    const publishers = await Publisher.find();
 
-    res.render('books/edit', { book, authors, publishers });
-};
 
 exports.update = async (req, res) => {
-    const { title, isbn, year_of_publication, author, publisher, available } = req.body;
-    await Book.findOneAndUpdate({ isbn: req.params.isbn }, {
-        title, isbn, year_of_publication, author, publisher, available
-    });
-    res.redirect('/books');
+    try {
+        const { title, isbn, year_of_publication, author, publisher, category, available } = req.body;
+
+        const updated = await Book.findOneAndUpdate(
+            {isbn: req.params.isbn},
+            { title, isbn, year_of_publication, author, publisher,category, available },
+            { new: true }
+        ).populate('author').populate('publisher').populate('category');
+
+        if (!updated) return res.status(404).json({ message: 'Książka nie znaleziona' });
+
+        res.json(updated);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
 };
 
 exports.destroy = async (req, res) => {
-    await Book.findOneAndDelete({ isbn: req.params.isbn });
-    res.redirect('/books');
+    try {
+        const deleted = await Book.findOneAndDelete({ isbn: req.params.isbn });
+        if (!deleted) return res.status(404).json({ message: 'Książka nie znaleziona' });
+        res.json({ message: 'Usunięto książkę', deleted });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };

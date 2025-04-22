@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const exphbs = require('express-handlebars');
 const methodOverride = require('method-override');
 const app = express();
-
+app.use(express.json()); // <== TO JEST NAJWAŻNIEJSZE DLA JSONA
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
