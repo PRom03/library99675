@@ -1,5 +1,7 @@
 const Book = require('../models/Book');
-
+const Author = require('../models/Author');
+const Publisher = require('../models/Publisher');
+const Category = require('../models/Category');
 exports.index = async (req, res) => {
     try {
         const books = await Book.find().populate('author').populate('publisher').populate('category');
