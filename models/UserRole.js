@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const userRoleSchema = new mongoose.Schema({
-    id: { type: Number, unique: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     role: { type: mongoose.Schema.Types.ObjectId, ref: 'role' },
 

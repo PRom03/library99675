@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const favoriteSchema = new mongoose.Schema({
-    id: { type: Number, unique: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     book: { type: mongoose.Schema.Types.ObjectId, ref: 'book' },
     book_isbn: String,

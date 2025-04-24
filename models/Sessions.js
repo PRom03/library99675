@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const sessionsSchema = new mongoose.Schema({
-    id: { type: String, unique: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     payload: String,
     user_agent: String,

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const loanSchema = new mongoose.Schema({
-    id: { type: Number, unique: true },
     title: String,
     loan_date: Date,
     return_date: Date,

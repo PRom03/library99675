@@ -25,7 +25,7 @@ exports.store = async (req, res) => {
 
 exports.show = async (req, res) => {
     try {
-        const book = await Book.findOne({isbn:req.params.isbn}).populate('author').populate('publisher');
+        const book = await Book.findOne({isbn:req.params.isbn}).populate('author').populate('publisher').populate('category');
         if (!book) return res.status(404).json({ message: 'Książka nie znaleziona' });
         res.json(book);
     } catch (err) {
