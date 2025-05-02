@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authorController = require('../controllers/authorController');
+const {authenticate,authorize} = require("../middleware/auth");
 
 // Wyświetlenie wszystkich książek
 router.get('/', authorController.index);
@@ -8,7 +9,7 @@ router.get('/', authorController.index);
 
 
 // Obsługa wysłania formularza (dodanie książki do bazy)
-router.post('/', authorController.store);
+router.post('/', authenticate,authorize(['Admin']), authorController.store);
 
 // Szczegóły konkretnej książki
 router.get('/:_id', authorController.show);
@@ -16,7 +17,7 @@ router.get('/:_id', authorController.show);
 // Formularz edycji istniejącej książki
 
 // Obsługa wysłania formularza edycji
-router.patch('/:_id/update', authorController.update);
+router.patch('/:_id/update',authenticate,authorize(['Admin']), authorController.update);
 
 // Usunięcie książki
 router.delete('/:_id/delete', authorController.destroy);
