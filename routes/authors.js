@@ -2,24 +2,17 @@ const express = require('express');
 const router = express.Router();
 const authorController = require('../controllers/authorController');
 const {authenticate,authorize} = require("../middleware/auth");
-
-// Wyświetlenie wszystkich książek
+const { validateAuthor, handleValidationErrors } = require('../middleware/validation');
 router.get('/', authorController.index);
 
 
 
-// Obsługa wysłania formularza (dodanie książki do bazy)
-router.post('/', authenticate,authorize(['Admin']), authorController.store);
+router.post('/', authenticate,authorize(['Admin']), validateAuthor,handleValidationErrors,authorController.store);
 
-// Szczegóły konkretnej książki
 router.get('/:_id', authorController.show);
 
-// Formularz edycji istniejącej książki
+router.patch('/:_id',authenticate,authorize(['Admin']), validateAuthor,handleValidationErrors,authorController.update);
 
-// Obsługa wysłania formularza edycji
-router.patch('/:_id/update',authenticate,authorize(['Admin']), authorController.update);
-
-// Usunięcie książki
-router.delete('/:_id/delete', authorController.destroy);
+router.delete('/:_id', authenticate,authorize(['Admin']),authorController.destroy);
 
 module.exports = router;

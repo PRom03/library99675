@@ -1,24 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/bookController');
+const {authenticate, authorize} = require("../middleware/auth");
+const {validateBook, handleValidationErrors} = require("../middleware/validation");
 
-// Wyświetlenie wszystkich książek
 router.get('/', bookController.index);
 
+router.post('/', authenticate,authorize(['Admin']),validateBook,handleValidationErrors,bookController.store);
 
-
-// Obsługa wysłania formularza (dodanie książki do bazy)
-router.post('/', bookController.store);
-
-// Szczegóły konkretnej książki
 router.get('/:isbn', bookController.show);
 
-// Formularz edycji istniejącej książki
 
-// Obsługa wysłania formularza edycji
-router.patch('/:isbn/update', bookController.update);
+router.patch('/:isbn', authenticate,authorize(['Admin']),validateBook,handleValidationErrors,bookController.update);
 
-// Usunięcie książki
-router.delete('/:isbn/delete', bookController.destroy);
+router.delete('/:isbn', authenticate,authorize(['Admin']),bookController.destroy);
 
 module.exports = router;

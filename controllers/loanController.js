@@ -1,29 +1,40 @@
 const Loan = require('../models/loan');
 const Book = require('../models/book');
-const UserRole = require('../models/userRole');
+const User = require('../models/user');
 const Role = require('../models/role');
 const dayjs = require('dayjs');
 
 async function getUserRoleName(userId) {
-    const userRole = await UserRole.findOne({ user: userId }).populate('role');
-    return userRole?.role?.role_name || null;
+    const user = await User.findById(userId).populate('role');
+    return user?.role?.role_name || null;
 }
+
+const jwt = require('jsonwebtoken');
 
 exports.getLoans = async (req, res) => {
     try {
-        const user = req.user;
-        const roleName = await getUserRoleName(user._id);
 
-        const query = (roleName === 'assistant' || roleName === 'Admin')
-            ? {}
-            : { user: user._id };
+        const roleName = req.user.role_name ; // zależnie co pakujesz
+        console.log(roleName);
+        if (!req.user._id) {
+            return res.status(401).json({ error: 'Nieprawidłowy token' });
+        }
 
-        const loans = await Loan.find(query).populate('user').populate('book');
+        let query = {};
+        if (roleName === 'User') {
+            query = { user: req.user._id };
+        }
+
+        const loans = await Loan.find(query).populate('book').populate('user');
         res.json(loans);
+
     } catch (err) {
-        res.status(500).json({ error: 'Server error' });
+        console.error('Błąd w getLoans:', err);
+        return res.status(500).json({ error: 'Błąd serwera' });
     }
 };
+
+
 
 exports.createLoan = async (req, res) => {
     const { isbn } = req.body;
@@ -45,7 +56,6 @@ exports.createLoan = async (req, res) => {
         }
 
         const loan = new Loan({
-            title: book.title,
             book: book._id,
             user: req.user._id,
             loan_date: new Date(),
@@ -69,17 +79,22 @@ exports.deleteLoan = async (req, res) => {
         const loan = await Loan.findOne({ _id: req.params._id }).populate('book');
         if (!loan) return res.status(404).json({ error: 'Nie znaleziono' });
 
-        const roleName = await getUserRoleName(req.user._id);
+        const roleName = req.user.role_name;
+        console.log('req.user:', req.user);
+        console.log('loan:', loan);
         if (loan.status === 'reserved' && roleName === 'User') {
-            loan.book.available++;
-            await loan.book.save();
-            await loan.remove();
+            const book = await Book.findById(loan.book._id);
+            book.available++;
+            await book.save();
+            await loan.deleteOne();
             return res.json({ message: 'Rezerwacja usunięta' });
         }
 
         res.status(403).json({ error: 'Brak uprawnień' });
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: 'Błąd serwera' });
+
     }
 };
 
@@ -88,7 +103,7 @@ exports.markLoaned = async (req, res) => {
         const loan = await Loan.findOne({ _id: req.params._id });
         if (!loan) return res.status(404).json({ error: 'Nie znaleziono' });
 
-        const roleName = await getUserRoleName(req.user._id);
+        const roleName = req.user.role_name;
         if (roleName === 'assistant') {
             loan.status = 'loaned';
             loan.return_date = dayjs().add(1, 'month').toDate();
@@ -107,14 +122,14 @@ exports.markReturned = async (req, res) => {
         const loan = await Loan.findById({ _id: req.params._id }).populate('book');
         if (!loan) return res.status(404).json({ error: 'Nie znaleziono' });
 
-        const roleName = await getUserRoleName(req.user._id);
+        const roleName = req.user.role_name;
         if (roleName === 'assistant') {
             loan.status = 'returned';
             loan.return_date = new Date();
             await loan.save();
-
-            loan.book.available++;
-            await loan.book.save();
+            const book = await Book.findById(loan.book._id);
+            book.available++;
+            await book.save();
 
             return res.json({ message: 'Książka zwrócona' });
         }
@@ -122,6 +137,7 @@ exports.markReturned = async (req, res) => {
         res.status(403).json({ error: 'Brak uprawnień' });
     } catch (err) {
         res.status(500).json({ error: 'Błąd serwera' });
+        console.log(err);
     }
 };
 
@@ -141,6 +157,7 @@ exports.prolongLoan = async (req, res) => {
         res.json({ message: 'Przedłużono wypożyczenie o miesiąc' });
     } catch (err) {
         res.status(500).json({ error: 'Błąd serwera' });
+
     }
 };
 

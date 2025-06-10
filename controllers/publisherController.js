@@ -18,6 +18,7 @@ exports.store = async (req, res) => {
         const newPublisher= await Publisher.create({ name,image_source });
         res.status(201).json(newPublisher);
     } catch (err) {
+        console.log(err)
         res.status(400).json({ error: err.message });
     }
 };

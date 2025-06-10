@@ -39,7 +39,7 @@ exports.update = async (req, res) => {
         const { name } = req.body;
 
         const updated = await Category.findOneAndUpdate(
-            {_id: req.params._id},
+            {_id:req.params._id},
             { name },
             { new: true }
         );

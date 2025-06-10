@@ -17,9 +17,9 @@ router.get('/:_id', authorController.show);
 // Formularz edycji istniejącej książki
 
 // Obsługa wysłania formularza edycji
-router.patch('/:_id/update', authorController.update);
+router.patch('/:_id', authorController.update);
 
 // Usunięcie książki
-router.delete('/:_id/delete', authorController.destroy);
+router.delete('/:_id', authorController.destroy);
 
 module.exports = router;

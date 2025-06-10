@@ -1,24 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/categoryController');
+const {authenticate, authorize} = require("../middleware/auth");
+const {handleValidationErrors, validateCategory} = require("../middleware/validation");
 
-// Wyświetlenie wszystkich książek
 router.get('/', categoryController.index);
 
 
 
-// Obsługa wysłania formularza (dodanie książki do bazy)
-router.post('/', categoryController.store);
+router.post('/',authenticate,authorize(['Admin']), validateCategory,handleValidationErrors,categoryController.store);
 
-// Szczegóły konkretnej książki
+
 router.get('/:_id', categoryController.show);
 
-// Formularz edycji istniejącej książki
+router.patch('/:_id', authenticate,authorize(['Admin']),validateCategory,handleValidationErrors,categoryController.update);
 
-// Obsługa wysłania formularza edycji
-router.patch('/:_id/update', categoryController.update);
-
-// Usunięcie książki
-router.delete('/:_id/delete', categoryController.destroy);
+router.delete('/:_id', authenticate,authorize(['Admin']),categoryController.destroy);
 
 module.exports = router;

@@ -10,4 +10,4 @@ const bookSchema = new mongoose.Schema({
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'category' }
 }, { collection: 'book' }); // ważne: kolekcja może nie być domyślnie liczba mnoga
 
-module.exports = mongoose.model('Book', bookSchema);
+module.exports = mongoose.models.Book || mongoose.model('Book', bookSchema);

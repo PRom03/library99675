@@ -12,6 +12,6 @@ const userSchema = new mongoose.Schema({
     created_at: Date,
     updated_at: Date,
     role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' },
-}, { collection: 'users' }); // ważne: kolekcja może nie być domyślnie liczba mnoga
+}, { collection: 'users' });
 
 module.exports =  mongoose.model('User', userSchema);
