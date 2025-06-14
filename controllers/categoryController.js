@@ -25,7 +25,7 @@ exports.store = async (req, res) => {
 exports.show = async (req, res) => {
     try {
         const category = await Category.findOne({_id:req.params._id});
-        if (!category) return res.status(404).json({ message: 'Autor nie znaleziony' });
+        if (!category) return res.status(404).json({ message: 'Kategoria nie znaleziona' });
         res.json(category);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -44,7 +44,7 @@ exports.update = async (req, res) => {
             { new: true }
         );
 
-        if (!updated) return res.status(404).json({ message: 'Autor nie zaktualizowany' });
+        if (!updated) return res.status(404).json({ message: 'Kategoria nie zaktualizowana' });
 
         res.json(updated);
     } catch (err) {
@@ -55,8 +55,8 @@ exports.update = async (req, res) => {
 exports.destroy = async (req, res) => {
     try {
         const deleted = await Category.findOneAndDelete({ _id: req.params._id });
-        if (!deleted) return res.status(404).json({ message: 'Książka nie znaleziona' });
-        res.json({ message: 'Usunięto książkę', deleted });
+        if (!deleted) return res.status(404).json({ message: 'Kategoria nie znaleziona' });
+        res.json({ message: 'Usunięto kategorię', deleted });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

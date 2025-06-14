@@ -26,7 +26,7 @@ exports.store = async (req, res) => {
 exports.show = async (req, res) => {
     try {
         const publisher = await Publisher.findOne({_id:req.params._id});
-        if (!publisher) return res.status(404).json({ message: 'Autor nie znaleziony' });
+        if (!publisher) return res.status(404).json({ message: 'Wydawca nie znaleziony' });
         res.json(publisher);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -45,7 +45,7 @@ exports.update = async (req, res) => {
             { new: true }
         );
 
-        if (!updated) return res.status(404).json({ message: 'Autor nie zaktualizowany' });
+        if (!updated) return res.status(404).json({ message: 'Wydawca nie zaktualizowany' });
 
         res.json(updated);
     } catch (err) {
@@ -56,8 +56,8 @@ exports.update = async (req, res) => {
 exports.destroy = async (req, res) => {
     try {
         const deleted = await Publisher.findOneAndDelete({ _id: req.params._id });
-        if (!deleted) return res.status(404).json({ message: 'Książka nie znaleziona' });
-        res.json({ message: 'Usunięto książkę', deleted });
+        if (!deleted) return res.status(404).json({ message: 'Wydawca nie znaleziony' });
+        res.json({ message: 'Usunięto wydawcę', deleted });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

@@ -6,6 +6,6 @@ const sessionsSchema = new mongoose.Schema({
     user_agent: String,
     ip_address: String,
     last_activity: Number
-}, { collection: 'sessions' }); // ważne: kolekcja może nie być domyślnie liczba mnoga
+}, { collection: 'sessions' });
 
 module.exports = mongoose.model('sessions', sessionsSchema);

@@ -6,6 +6,6 @@ const authorSchema = new mongoose.Schema({
     birthyear: Number,
     brief_bio: String,
     image_source: String
-}, { collection: 'author' }); // ważne: kolekcja może nie być domyślnie liczba mnoga
+}, { collection: 'author' });
 
 module.exports = mongoose.model('author', authorSchema);

@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Role = require('../models/Role');
 require('dotenv').config();
-// Uwierzytelnienie użytkownika i dołączenie roli
 const authenticate = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
@@ -17,7 +16,6 @@ const authenticate = async (req, res, next) => {
         const user = await User.findOne({_id:payload.id}).populate('role');
         if (!user) return res.status(401).json({ error: 'Nieprawidłowy użytkownik' });
 
-        // Dodaj dane do req.user
         req.user = {
             _id: user._id,
             email: user.email,
@@ -31,7 +29,6 @@ const authenticate = async (req, res, next) => {
     }
 };
 
-// Autoryzacja ról
 const authorize = (roles = []) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role_name)) {

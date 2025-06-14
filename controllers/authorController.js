@@ -55,8 +55,8 @@ exports.update = async (req, res) => {
 exports.destroy = async (req, res) => {
     try {
         const deleted = await Author.findOneAndDelete({ _id: req.params._id });
-        if (!deleted) return res.status(404).json({ message: 'Książka nie znaleziona' });
-        res.json({ message: 'Usunięto książkę', deleted });
+        if (!deleted) return res.status(404).json({ message: 'Autor nie znaleziony' });
+        res.json({ message: 'Usunięto autora', deleted });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

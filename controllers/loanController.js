@@ -14,7 +14,7 @@ const jwt = require('jsonwebtoken');
 exports.getLoans = async (req, res) => {
     try {
 
-        const roleName = req.user.role_name ; // zależnie co pakujesz
+        const roleName = req.user.role_name ;
         console.log(roleName);
         if (!req.user._id) {
             return res.status(401).json({ error: 'Nieprawidłowy token' });

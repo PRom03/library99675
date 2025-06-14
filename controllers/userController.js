@@ -3,7 +3,7 @@ const Role = require("../models/Role");
 require('dotenv').config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = process.env.JWT_SECRET || "tajny_klucz"; // W .env ustaw silny klucz
+const JWT_SECRET = process.env.JWT_SECRET || "tajny_klucz";
 exports.register = async (req, res) => {
     try {
         let {name,email,password } = req.body;

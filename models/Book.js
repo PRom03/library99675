@@ -8,6 +8,6 @@ const bookSchema = new mongoose.Schema({
     publisher: { type: mongoose.Schema.Types.ObjectId, ref: 'publisher' },
     available: Number,
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'category' }
-}, { collection: 'book' }); // ważne: kolekcja może nie być domyślnie liczba mnoga
+}, { collection: 'book' });
 
 module.exports = mongoose.models.Book || mongoose.model('Book', bookSchema);

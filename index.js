@@ -5,7 +5,7 @@ const app = express();
 const cors = require('cors');
 
 app.use(cors());
-app.use(express.json()); // <== TO JEST NAJWAŻNIEJSZE DLA JSONA
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
@@ -32,7 +32,6 @@ app.use('/publishers', require('./routes/publishers'));
 app.use('/categories', require('./routes/categories'));
 
 app.use('/users', require('./routes/users'));
-app.use('/favorites', require('./routes/favorites'));
 app.use('/loans', require('./routes/loans'));
 app.use('/search',require('./routes/search'));
 app.use('/recommended', require('./routes/recommendations'));
@@ -49,7 +48,7 @@ cron.schedule('0 0 * * *', async () => {
         });
 
         for (const loan of expiredReservations) {
-            loan.status = 'cancelled'; // lub np. await loan.deleteOne()
+            await loan.deleteOne()
             await loan.save();
             console.log(`Anulowano rezerwację o ID: ${loan._id}`);
         }

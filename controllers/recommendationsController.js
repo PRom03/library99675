@@ -11,7 +11,6 @@ exports.getRecommendations = async (req, res) => {
 
         const loanedBookIds = loanedBooks.map(book => book._id.toString());
 
-        // Zbieramy wszystkie kategorie z wypożyczonych książek (jeśli to tablica)
         const loanedCategoryIds = new Set();
         loanedBooks.forEach(book => {
             if (Array.isArray(book.category)) {
@@ -29,8 +28,7 @@ exports.getRecommendations = async (req, res) => {
             .populate('publisher')
             .populate('category');
 
-        res.json(recommendedBooks); // teraz zwraca tablicę, nie obiekt!
-        //console.log(recommendedBooks);
+        res.json(recommendedBooks);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Błąd podczas pobierania rekomendacji' });

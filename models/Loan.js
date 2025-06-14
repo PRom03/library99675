@@ -9,6 +9,6 @@ const loanSchema = new mongoose.Schema({
     status: String,
     prolonged: Boolean,
     penalty: Number
-}, { collection: 'loan' }); // ważne: kolekcja może nie być domyślnie liczba mnoga
+}, { collection: 'loan' });
 
 module.exports = mongoose.models.loan || mongoose.model('loan', loanSchema);

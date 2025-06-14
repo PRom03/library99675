@@ -4,6 +4,6 @@ if (mongoose.models.Role) {
 }
 const roleSchema = new mongoose.Schema({
     role_name: String
-}, { collection: 'role' }); // ważne: kolekcja może nie być domyślnie liczba mnoga
+}, { collection: 'role' });
 
 module.exports = mongoose.model('Role', roleSchema);
